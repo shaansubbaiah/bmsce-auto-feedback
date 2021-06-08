@@ -10,15 +10,10 @@
 - Clone the repository
 - Run `pip install selenium`
 - Set the RATING `feedback.py` or leave it as is. (default is 'Excellent')
+- Download chromedriver from https://chromedriver.chromium.org/downloads
+- Extract it and put it in the /bmsce-auto-feedback directory
 - Run `python feedback.py`
 
-NOTE: In case you get an issue due the webdriver not being present in PATH:
-
-1) Try following [some tutorial to add it to your path](https://zwbetz.com/download-chromedriver-binary-and-add-to-your-path-for-automated-functional-testing/) 
-
-    (OR)
-
-2) Add the path to the webdriver. eg.`driver = webdriver.Chrome('~/path/to/your/webdriver')`
 
 ### Output
 
