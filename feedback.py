@@ -25,14 +25,14 @@ def autoFeedback(user_usn, user_pass):
 
     driver.get(WEBCAMPUS_URL)
 
-    usn_field = driver.find_element_by_id('usn')
+    usn_field = driver.find_element(By.ID, 'usn')
     usn_field.send_keys(user_usn)
 
-    pass_field = driver.find_element_by_id('password')
+    pass_field = driver.find_element(By.ID, 'password')
     pass_field.send_keys(user_pass)
 
-    signin_btn = driver.find_element_by_xpath(
-        '/html/body/div/div/div/form/div/div/button')
+    signin_btn = driver.find_element(
+        By.XPATH, '/html/body/div/div/div/form/div/div/button')
     signin_btn.click()
 
     try:
@@ -44,7 +44,7 @@ def autoFeedback(user_usn, user_pass):
     print('Signed in.')
 
     feedback_page_url = ''
-    view_btns = driver.find_elements_by_partial_link_text('View')
+    view_btns = driver.find_elements(By.PARTIAL_LINK_TEXT, 'View')
     for view_btn in view_btns:
         if FEEDBACK_BASE_URL in view_btn.get_attribute('href'):
             feedback_page_url = view_btn.get_attribute('href')
@@ -53,7 +53,7 @@ def autoFeedback(user_usn, user_pass):
     print('In feedback page.')
 
     feedback_urls = []
-    course_btns = driver.find_elements_by_link_text('Give Feedback')
+    course_btns = driver.find_elements(By.PARTIAL_LINK_TEXT, 'Give Feedback')
     for course_btn in course_btns:
         feedback_urls.append(course_btn.get_attribute('href'))
 
@@ -65,24 +65,24 @@ def autoFeedback(user_usn, user_pass):
 
             driver.get(feedback_url)
 
-            breadcrumb = driver.find_element_by_class_name('breadcrumb')
-            course_name = breadcrumb.find_elements_by_tag_name('li')[-1].text
+            breadcrumb = driver.find_element(By.CLASS_NAME, 'breadcrumb')
+            course_name = breadcrumb.find_elements(By.TAG_NAME, 'li')[-1].text
 
-            feedback_form = driver.find_element_by_id('js_dataTable1')
-            rows = feedback_form.find_elements_by_css_selector('tbody tr')
+            feedback_form = driver.find_element(By.ID, 'js_dataTable1')
+            rows = feedback_form.find_elements(By.CSS_SELECTOR, 'tbody tr')
 
             rating_val = {'Excellent': 1, 'Very Good': 2,
                           'Good': 3, 'Fair': 4, 'Poor': 5}
 
             # rows 0-7 -> selection; row 8 -> custom feedback message; row 9 -> submit btn
             for row in rows[:-2]:
-                cols = row.find_elements_by_tag_name('td')
+                cols = row.find_elements(By.TAG_NAME, 'td')
                 # cols 0,1 -> s.no, competency; cols 2-6 -> excellent, vgood, good, fair, poor
 
                 radio_btn = cols[1+rating_val[RATING]]
                 radio_btn.click()
 
-            feedback_form.find_element_by_id('submit_feedback').click()
+            feedback_form.find_element(By.ID, 'submit_feedback').click()
             print('-- Feedback for', course_name, 'submitted.')
 
         print("And we're done.")
