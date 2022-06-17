@@ -4,24 +4,25 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from getpass import getpass
+import chromedriver_autoinstaller
 
 WEBCAMPUS_URL = 'https://webcampus.bmsce.in/student'
 FEEDBACK_BASE_URL = 'https://webcampus.bmsce.in/student/feedbackFaculty/'
 
-# CONFIG
-RATING = 'Excellent'  # 'Excellent', 'Very Good', 'Good', 'Fair', 'Poor'
-
-
 def screamErrorAndQuit(msg):
     print(f'ERROR: {msg}')
-    driver.quit()
     exit(1)
 
+def autoFeedback(user_usn, user_pass, rating):
+    # Gets the latest version of Chrome Driver and
+    # adds it to the path automatically
+    print("Installing chrome-driver...")
+    chromedriver_autoinstaller.install()
+    print("Done.")
 
-def autoFeedback(user_usn, user_pass):
     # set webdriver to browser you intend to run this on
-    driver = webdriver.Chrome(executable_path='chromedriver')
-    # driver = webdriver.Firefox()
+    driver = webdriver.Chrome()
+    # driver = webdriver.Firefox()    
 
     driver.get(WEBCAMPUS_URL)
 
@@ -40,6 +41,7 @@ def autoFeedback(user_usn, user_pass):
             EC.presence_of_element_located((By.CLASS_NAME, "page-profile"))
         )
     except:
+        driver.quit()
         screamErrorAndQuit('Wrong login details!')
     print('Signed in.')
 
@@ -71,15 +73,12 @@ def autoFeedback(user_usn, user_pass):
             feedback_form = driver.find_element(By.ID, 'js_dataTable1')
             rows = feedback_form.find_elements(By.CSS_SELECTOR, 'tbody tr')
 
-            rating_val = {'Excellent': 1, 'Very Good': 2,
-                          'Good': 3, 'Fair': 4, 'Poor': 5}
-
             # rows 0-7 -> selection; row 8 -> custom feedback message; row 9 -> submit btn
             for row in rows[:-2]:
                 cols = row.find_elements(By.TAG_NAME, 'td')
                 # cols 0,1 -> s.no, competency; cols 2-6 -> excellent, vgood, good, fair, poor
 
-                radio_btn = cols[1+rating_val[RATING]]
+                radio_btn = cols[1+rating]
                 radio_btn.click()
 
             feedback_form.find_element(By.ID, 'submit_feedback').click()
@@ -93,13 +92,34 @@ def autoFeedback(user_usn, user_pass):
 
 
 def main():
-    print('Starting bmsce-auto-feedback')
+    print(
+    """
+
+    ██████╗ ███╗   ███╗███████╗ ██████╗███████╗    ███████╗███████╗███████╗██████╗ ██████╗  █████╗  ██████╗██╗  ██╗
+    ██╔══██╗████╗ ████║██╔════╝██╔════╝██╔════╝    ██╔════╝██╔════╝██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝██║ ██╔╝
+    ██████╔╝██╔████╔██║███████╗██║     █████╗      █████╗  █████╗  █████╗  ██║  ██║██████╔╝███████║██║     █████╔╝ 
+    ██╔══██╗██║╚██╔╝██║╚════██║██║     ██╔══╝      ██╔══╝  ██╔══╝  ██╔══╝  ██║  ██║██╔══██╗██╔══██║██║     ██╔═██╗ 
+    ██████╔╝██║ ╚═╝ ██║███████║╚██████╗███████╗    ██║     ███████╗███████╗██████╔╝██████╔╝██║  ██║╚██████╗██║  ██╗
+    ╚═════╝ ╚═╝     ╚═╝╚══════╝ ╚═════╝╚══════╝    ╚═╝     ╚══════╝╚══════╝╚═════╝ ╚═════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
+                                                                                                                  
+
+    """)
 
     print('Attempting sign in.')
     user_usn = input('-- Enter USN: ')
     user_pass = getpass('-- Enter Password: ')
+    rating = int(input(
+    """--  Choose a Rating
+    1. Excellent
+    2. Very Good
+    3. Good
+    4. Fair
+    5. Poor
+    """))
+    if rating not in [1, 2, 3, 4, 5]:
+      screamErrorAndQuit("Invalid Rating")
 
-    autoFeedback(user_usn, user_pass)
+    autoFeedback(user_usn.upper(), user_pass, rating)
 
 
 if __name__ == "__main__":
