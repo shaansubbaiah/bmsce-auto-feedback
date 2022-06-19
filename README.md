@@ -8,10 +8,7 @@
 ## Setup
 
 - Clone the repository
-- Run `pip install selenium`
-- Set the RATING `feedback.py` or leave it as is. (default is 'Excellent')
-- Download chromedriver from https://chromedriver.chromium.org/downloads
-- Extract it and put it in the /bmsce-auto-feedback directory
+- Run `pip install selenium chromedriver-autoinstaller`
 - Run `python feedback.py`
 
 
@@ -19,10 +16,23 @@
 
 ```
 ❯ python feedback.py
-Starting bmsce-auto-feedback
+
+░█▀▄░█▄█░█▀▀░█▀▀░█▀▀░░░█▀▀░█▀▀░█▀▀░█▀▄░█▀▄░█▀█░█▀▀░█░█
+░█▀▄░█░█░▀▀█░█░░░█▀▀░░░█▀▀░█▀▀░█▀▀░█░█░█▀▄░█▀█░█░░░█▀▄
+░▀▀░░▀░▀░▀▀▀░▀▀▀░▀▀▀░░░▀░░░▀▀▀░▀▀▀░▀▀░░▀▀░░▀░▀░▀▀▀░▀░▀
+
 Attempting sign in.
 -- Enter USN: 1BM18CS096
--- Enter Password: 
+-- Enter Password:
+--  Choose a Rating
+    1. Excellent
+    2. Very Good
+    3. Good
+    4. Fair
+    5. Poor
+    1 
+Installing chrome-driver...
+Done.
 Signed in.
 In feedback page.
 Found 6 courses that need feedback.
